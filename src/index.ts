@@ -1,30 +1,27 @@
 // import { remark } from "remark";
 import fs from "fs";
-import { unified } from "unified";
-import parser from "remark-parse";
+
 import stringify from "remark-stringify";
-import { remarkCodeRunnerPlugin } from "./plugin";
+import { unified } from "unified";
+
+import { remarkCodeRunnerPlugin } from "./plugin.ts";
+
+const argv = process.argv.slice(2);
+if (argv.length !== 1) {
+  console.log("Expecting one argument like: code-runner [filename]");
+  process.exit(1);
+}
+const filename = argv[0]!;
 
 function run() {
-  const file = fs.readFileSync("filename");
-  const ast = remark.get("filepath");
-  for (let i = 0; i < ast.root.length; ++i) {
-    const node = ast.root[i];
-    if (node?.type === "CodeBlock") {
-      const followingNode = ast.root[i + 1];
-      const hasFollowingCodeOutput =
-        followingNode?.type === "CodeBlock" && followingNode.attr === "output";
-      if (hasFollowingCodeOutput) {
-        // todo
-      }
-    }
-  }
+  const file = fs.readFileSync(filename);
+  updateMarkdown(file.toString());
   // write ast back to file
 }
+run();
 
 function updateMarkdown(markdownInput: string) {
   unified()
-    .use(parser)
     .use(stringify)
     .use(remarkCodeRunnerPlugin)
     .process(markdownInput)
