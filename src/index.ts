@@ -1,6 +1,7 @@
 import fs from "fs";
 
 import rehypePrism from "@mapbox/rehype-prism";
+import { Command } from "commander";
 import rehypeDocument from "rehype-document";
 import rehypeFormat from "rehype-format";
 // import rehypeShiki from "rehype-shiki";
@@ -12,26 +13,53 @@ import remarkStringify from "remark-stringify";
 import remarkToc from "remark-toc";
 import { unified } from "unified";
 
+import { version } from "../package.json";
+
 import { rehypeInjectCss } from "./rehype-css-plugin.js";
 import { remarkCodeRunnerPlugin } from "./remark-code-runner-plugin.js";
 
-const argv = process.argv.slice(2);
-if (argv.length !== 1) {
-  console.log("Expecting one argument like: code-runner [filename]");
-  process.exit(1);
-}
-const filename = argv[0]!;
+const program = new Command();
 
-async function run() {
-  const file = fs.readFileSync(filename);
-  updateMarkdown(file.toString()).then(console.log);
-  const { value } = await runAndConvertToHtml(file.toString());
-  fs.writeFileSync(filename.replace(/\.[^.]*?$/, ".html"), value, {
-    encoding: "utf-8",
+program
+  .name("code-runner")
+  .description("Runs the code in your markdown and outputs markdown or html")
+  .version(version);
+
+program
+  .command("md")
+  .description("Update markdown")
+  .argument("<string>", "filename")
+  .option("-w, --write", "write to file in place")
+  .action((filename: string, { write }: { write?: boolean }) => {
+    const file = fs.readFileSync(filename).toString();
+    updateMarkdown(file)
+      .then(({ value }) => {
+        if (write) {
+          fs.writeFileSync(filename, value, { encoding: "utf-8" });
+        }
+      })
+      .catch(console.error);
   });
-  // write ast back to file
-}
-run().catch(console.error);
+
+program
+  .command("html")
+  .description("Create html")
+  .argument("<string>", "filename")
+  .option("-o, --output [outfile]", "file to output to")
+  .action((filename: string, { output }: { output?: string }) => {
+    const file = fs.readFileSync(filename).toString();
+    runAndConvertToHtml(file, filename)
+      .then(({ value }) => {
+        if (output) {
+          fs.writeFileSync(value, value, { encoding: "utf-8" });
+        } else {
+          console.log(value);
+        }
+      })
+      .catch(console.error);
+  });
+
+program.parse();
 
 async function updateMarkdown(markdownInput: string) {
   return unified()
@@ -40,11 +68,10 @@ async function updateMarkdown(markdownInput: string) {
     .use(remarkCodeRunnerPlugin)
     .use(remarkToc)
     .use(remarkStringify)
-    .process(markdownInput)
-    .then((file) => file.value);
+    .process(markdownInput);
 }
 
-function runAndConvertToHtml(markdownInput: string) {
+function runAndConvertToHtml(markdownInput: string, filename: string) {
   return (
     unified()
       .use(remarkParse)
