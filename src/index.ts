@@ -1,5 +1,9 @@
-import { remark } from "remark";
+// import { remark } from "remark";
 import fs from "fs";
+import { unified } from "unified";
+import parser from "remark-parse";
+import stringify from "remark-stringify";
+import { remarkCodeRunnerPlugin } from "./plugin";
 
 function run() {
   const file = fs.readFileSync("filename");
@@ -16,4 +20,28 @@ function run() {
     }
   }
   // write ast back to file
+}
+
+function updateMarkdown(markdownInput: string) {
+  unified()
+    .use(parser)
+    .use(stringify)
+    .use(remarkCodeRunnerPlugin)
+    .process(markdownInput)
+    .then((file) => {
+      console.log(file);
+      /* file.data.codeblocks = [ ... ] */
+    });
+}
+
+function runAndConvertToHtml(markdownInput: string) {
+  return unified()
+    .use(parser)
+    .use(stringify)
+    .use(remarkCodeRunnerPlugin)
+    .process(markdownInput)
+    .then((file) => {
+      console.log(file);
+      /* file.data.codeblocks = [ ... ] */
+    });
 }
