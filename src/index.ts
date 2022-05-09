@@ -3,6 +3,7 @@ import fs from "fs";
 import rehypePrism from "@mapbox/rehype-prism";
 import rehypeDocument from "rehype-document";
 import rehypeFormat from "rehype-format";
+// import rehypeShiki from "rehype-shiki";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
@@ -37,6 +38,7 @@ async function updateMarkdown(markdownInput: string) {
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkCodeRunnerPlugin)
+    .use(remarkToc)
     .use(remarkStringify)
     .process(markdownInput)
     .then((file) => file.value);
@@ -48,11 +50,13 @@ function runAndConvertToHtml(markdownInput: string) {
       .use(remarkParse)
       .use(remarkGfm)
       .use(remarkCodeRunnerPlugin)
+      .use(remarkToc)
       .use(remarkRehype)
       .use(rehypeDocument, { title: filename })
       .use(rehypeInjectCss, { cssPaths: ["theme.css"] })
       // useful: https://github.com/wooorm/refractor#syntaxes
-      .use(rehypePrism, { ignoreMissing: true, alias: { shell: "zsh" } })
+      .use(rehypePrism, { ignoreMissing: false, alias: { shell: "zsh" } })
+      // .use(rehypeShiki)
       .use(rehypeFormat)
       .use(rehypeStringify)
       .process(markdownInput)

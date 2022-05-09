@@ -9,7 +9,7 @@ type RehypeInjectCssOptions = { cssPaths: string[] };
 export const rehypeInjectCss: Plugin<[RehypeInjectCssOptions], Root> =
   ({ cssPaths }) =>
   (tree) => {
-    visit<Element>(tree, "element", (node) => {
+    visit<Root, Element["type"]>(tree, "element", (node) => {
       if (node.tagName === "head") {
         cssPaths.forEach((path) => {
           const style: Element = {

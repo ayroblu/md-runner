@@ -73,39 +73,13 @@ export const langConfig = {
   },
 };
 
-export function shell(
-  cmd: string,
-  options?: SpawnOptions,
-  stdoutCallback: () => void = () => {},
-  stderrCallback: () => void = () => {},
-  stdoutBuffer: string[] = [],
-  stderrBuffer: string[] = [],
-) {
+export function shell(cmd: string, options?: SpawnOptions) {
   const child = spawn(cmd, {
     shell: true,
     ...options,
   });
-  const stream = async () => {
-    for await (const chunk of child.stdout!) {
-      stdoutBuffer.push(chunk.toString());
-      stdoutCallback();
-    }
-    for await (const chunk of child.stderr!) {
-      stderrBuffer.push(chunk.toString());
-      stderrCallback();
-    }
-
-    const exitCode = await new Promise<number>((resolve) => {
-      child.on("close", resolve);
-    });
-    return exitCode;
-  };
-  // const streamPromise = stream();
 
   return {
     child,
-    // streamPromise,
-    stdoutBuffer,
-    stderrBuffer,
   };
 }

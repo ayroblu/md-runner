@@ -1,3 +1,7 @@
 /node_modules
-README.html
-theme.css
+/dist
+/yarn-error.log
+
+# outputs
+/README.html
+/theme.css
