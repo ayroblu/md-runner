@@ -1,10 +1,18 @@
-// import { remark } from "remark";
 import fs from "fs";
 
-import stringify from "remark-stringify";
+import rehypePrism from "@mapbox/rehype-prism";
+import rehypeDocument from "rehype-document";
+import rehypeFormat from "rehype-format";
+import rehypeStringify from "rehype-stringify";
+import remarkGfm from "remark-gfm";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import remarkStringify from "remark-stringify";
+import remarkToc from "remark-toc";
 import { unified } from "unified";
 
-import { remarkCodeRunnerPlugin } from "./plugin.ts";
+import { rehypeInjectCss } from "./rehype-css-plugin.js";
+import { remarkCodeRunnerPlugin } from "./remark-code-runner-plugin.js";
 
 const argv = process.argv.slice(2);
 if (argv.length !== 1) {
@@ -13,32 +21,40 @@ if (argv.length !== 1) {
 }
 const filename = argv[0]!;
 
-function run() {
+async function run() {
   const file = fs.readFileSync(filename);
-  updateMarkdown(file.toString());
+  updateMarkdown(file.toString()).then(console.log);
+  const { value } = await runAndConvertToHtml(file.toString());
+  fs.writeFileSync(filename.replace(/\.[^.]*?$/, ".html"), value, {
+    encoding: "utf-8",
+  });
   // write ast back to file
 }
-run();
+run().catch(console.error);
 
-function updateMarkdown(markdownInput: string) {
-  unified()
-    .use(stringify)
+async function updateMarkdown(markdownInput: string) {
+  return unified()
+    .use(remarkParse)
+    .use(remarkGfm)
     .use(remarkCodeRunnerPlugin)
+    .use(remarkStringify)
     .process(markdownInput)
-    .then((file) => {
-      console.log(file);
-      /* file.data.codeblocks = [ ... ] */
-    });
+    .then((file) => file.value);
 }
 
 function runAndConvertToHtml(markdownInput: string) {
-  return unified()
-    .use(parser)
-    .use(stringify)
-    .use(remarkCodeRunnerPlugin)
-    .process(markdownInput)
-    .then((file) => {
-      console.log(file);
-      /* file.data.codeblocks = [ ... ] */
-    });
+  return (
+    unified()
+      .use(remarkParse)
+      .use(remarkGfm)
+      .use(remarkCodeRunnerPlugin)
+      .use(remarkRehype)
+      .use(rehypeDocument, { title: filename })
+      .use(rehypeInjectCss, { cssPaths: ["theme.css"] })
+      // useful: https://github.com/wooorm/refractor#syntaxes
+      .use(rehypePrism, { ignoreMissing: true, alias: { shell: "zsh" } })
+      .use(rehypeFormat)
+      .use(rehypeStringify)
+      .process(markdownInput)
+  );
 }

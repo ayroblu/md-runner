@@ -8,6 +8,7 @@
   "private": true,
   "devDependencies": {
     "@types/node": "^17.0.31",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
     "eslint": "^8.15.0",
@@ -19,6 +20,7 @@
   },
   "scripts": {
     "start": "ts-node-esm src/index.ts",
+    "start:node-repl": "ts-node-esm src/node-repl.ts",
     "build": "tsc",
     "test": "echo \"Todo\"",
     "lint": "eslint src --ext .ts,.tsx",
@@ -26,9 +28,16 @@
     "ci": "yarn build && yarn lint && yarn test"
   },
   "dependencies": {
-    "remark": "^14.0.2",
+    "@mapbox/rehype-prism": "^0.8.0",
+    "rehype-document": "^6.0.1",
+    "rehype-format": "^4.0.1",
+    "rehype-stringify": "^9.0.3",
+    "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.1",
+    "remark-rehype": "^10.1.0",
     "remark-stringify": "^10.0.2",
-    "unified": "^10.1.2"
+    "remark-toc": "^8.0.1",
+    "unified": "^10.1.2",
+    "uuid": "^8.3.2"
   }
 }

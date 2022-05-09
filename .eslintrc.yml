@@ -18,7 +18,7 @@ rules:
   prefer-promise-reject-errors: error
   prefer-named-capture-group: error
   prefer-arrow-callback: error
-  no-return-assign: error
+  #no-return-assign: error
   no-return-await: error
   no-unneeded-ternary: error
   prefer-exponentiation-operator: error
