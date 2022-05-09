@@ -1,0 +1,54 @@
+---
+parser: "@typescript-eslint/parser"
+parserOptions:
+  ecmaVersion: 2020
+  sourceType: module
+plugins:
+- import
+- sort-destructure-keys
+- "@typescript-eslint"
+rules:
+  arrow-body-style:
+  - error
+  - as-needed
+  no-useless-rename: error
+  eqeqeq: error
+  prefer-const: error
+  no-throw-literal: error
+  prefer-promise-reject-errors: error
+  prefer-named-capture-group: error
+  prefer-arrow-callback: error
+  no-return-assign: error
+  no-return-await: error
+  no-unneeded-ternary: error
+  prefer-exponentiation-operator: error
+  no-useless-return: error
+  prefer-template: error
+  # no-unused-expressions: error
+  # prefer-destructuring:
+  # - error
+  # - array: false
+  #   object: true
+  # - enforceForRenamedProperties: true
+
+  import/order:
+  - error
+  - newlines-between: always
+    alphabetize:
+      order: asc
+    pathGroups:
+    - pattern: "@/**"
+      group: internal
+    pathGroupsExcludedImportTypes:
+    - builtin
+    groups:
+    - builtin
+    - external
+    - internal
+    - unknown
+    - parent
+    - sibling
+    - index
+  import/no-duplicates: error
+  "@typescript-eslint/sort-type-union-intersection-members": error
+  sort-destructure-keys/sort-destructure-keys: error
