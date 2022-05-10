@@ -32,6 +32,10 @@ console.log(`${hi} ${there}`)
 hi there
 ```
 
+### Usage
+
+This README.md is updated by running `yarn start md -w README.md`
+
 ### Supported languages
 
 zsh and bash (hidden first)
@@ -50,3 +54,8 @@ echo "hi"
 ```txt output
 hi
 ```
+
+### TODO
+
+1. Add support for "hidden", and "ignore" meta tags
+2. Add better HTML styling.
