@@ -1,14 +1,16 @@
-Code Runner
-===========
+# Code Runner
 
 This runs code blocks and outputs code blocks that contain the output of the run.
 
 For example with JavaScript I can do the following:
 
-
 ```js
 const hi = "hi"
 console.log(hi)
+```
+
+```txt output
+hi
 ```
 
 and variables are kept in scope so I can then follow it up with a following code block like:
@@ -18,8 +20,16 @@ const there = 'there'
 console.log(`${hi} ${there}`)
 ```
 
+```txt output
+hi there
+```
+
 ```js
 console.log(`${hi} ${there}`)
+```
+
+```txt output
+hi there
 ```
 
 ### Supported languages
@@ -35,4 +45,8 @@ zsh and bash (hidden first)
 
 ```zsh
 echo "hi"
+```
+
+```txt output
+hi
 ```
