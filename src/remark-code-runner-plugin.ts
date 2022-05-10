@@ -1,5 +1,6 @@
 import { Root, Code } from "mdast";
 import { Plugin } from "unified";
+import { visit } from "unist-util-visit";
 
 import { getShellRunner, langConfig } from "./shell-helper.js";
 
@@ -55,10 +56,9 @@ const isKey = <T extends { [k: number | string | symbol]: any }>(
 
 function getCodeToRun(tree: Root): CodeToRun[] {
   const codeToRun: CodeToRun[] = [];
-  for (let i = 0; i < tree.children.length; ++i) {
-    const node = tree.children[i];
-    if (node?.type === "code" && !isOutputCode(node)) {
-      const followingNode = tree.children[i + 1];
+  visit<Root, Code["type"]>(tree, "code", (node, index, parent) => {
+    if (parent && index !== null && !isOutputCode(node)) {
+      const followingNode = parent.children[index + 1];
       const hasFollowingCodeOutput =
         followingNode?.type === "code" && isOutputCode(followingNode);
 
@@ -72,12 +72,12 @@ function getCodeToRun(tree: Root): CodeToRun[] {
           lang: "txt",
           meta: "output",
         };
-        tree.children.splice(i + 1, 0, outputNode);
-        ++i;
+        parent.children.splice(index + 1, 0, outputNode);
         codeToRun.push({ codeNode: node, outputNode: outputNode });
       }
     }
-  }
+  });
+
   return codeToRun;
 }
 
