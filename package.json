@@ -19,7 +19,7 @@
     "typescript": "^4.6.4"
   },
   "scripts": {
-    "start": "ts-node-esm src/index.ts",
+    "start": "NODE_OPTIONS=\"--experimental-json-modules --no-warnings\" ts-node-esm src/index.ts",
     "start:node-repl": "ts-node-esm src/node-repl.ts",
     "build": "tsc",
     "test": "echo \"Todo\"",

@@ -13,7 +13,7 @@ import remarkStringify from "remark-stringify";
 import remarkToc from "remark-toc";
 import { unified } from "unified";
 
-import { version } from "../package.json";
+import p from "../package.json" assert { type: "json" };
 
 import { rehypeInjectCss } from "./rehype-css-plugin.js";
 import { remarkCodeRunnerPlugin } from "./remark-code-runner-plugin.js";
@@ -23,7 +23,7 @@ const program = new Command();
 program
   .name("code-runner")
   .description("Runs the code in your markdown and outputs markdown or html")
-  .version(version);
+  .version(p.version);
 
 program
   .command("md")
@@ -36,6 +36,8 @@ program
       .then(({ value }) => {
         if (write) {
           fs.writeFileSync(filename, value, { encoding: "utf-8" });
+        } else {
+          console.log(value);
         }
       })
       .catch(console.error);
