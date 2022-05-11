@@ -4,7 +4,7 @@ import { visit } from "unist-util-visit";
 
 import { getShellRunner, langConfig } from "./shell-helper.js";
 
-type RemarkCodeRunnerOptions = {};
+type RemarkCodeRunnerOptions = { shouldDeleteEmptyOutputNodes?: boolean };
 type CodeToRun = {
   codeNode: Code;
   outputNode: Code;
@@ -13,9 +13,8 @@ type CodeToRun = {
 };
 
 export const remarkCodeRunnerPlugin: Plugin<[RemarkCodeRunnerOptions?], Root> =
-  () => async (tree) => {
-    // console.log(JSON.stringify(tree, null, 2));
-    // return tree;
+  ({ shouldDeleteEmptyOutputNodes = true } = {}) =>
+  async (tree) => {
     const codeToRun: CodeToRun[] = getCodeToRun(tree);
     const { closeAllShellRunners, getShellRunnerByLang } = shellRunnerManager();
     const stack: (() => void)[] = [];
@@ -29,7 +28,9 @@ export const remarkCodeRunnerPlugin: Plugin<[RemarkCodeRunnerOptions?], Root> =
         outputNode.value = output;
       }
     }
-    stack.reverse().forEach((func) => func());
+    if (shouldDeleteEmptyOutputNodes) {
+      stack.reverse().forEach((func) => func());
+    }
     closeAllShellRunners();
 
     return tree;

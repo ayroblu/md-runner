@@ -36,9 +36,15 @@ hi there
 
 This README.md is updated by running `yarn start md -w README.md`
 
-### Supported languages
+### Example with stateful shell and detail summary
 
-zsh and bash (hidden first)
+```zsh
+pwd
+```
+
+```txt output
+/Users/blu/ws/md-runner
+```
 
 <details>
   <summary>Hidden - cd to another directory</summary>
@@ -47,21 +53,23 @@ zsh and bash (hidden first)
 cd ..
 ```
 
-```txt output
-```
-
 </details>
 
 ```zsh
-echo "hi"
+pwd
 ```
 
 ```txt output
-hi
+/Users/blu/ws
 ```
+
+### Supported languages
+
+*   js
+*   zsh
 
 ### TODO
 
 1.  Add support for "hidden", and "ignore" meta tags
 2.  Add better HTML styling.
-3. What to do about empty / no stdout blocks - maybe just remove themm?
+3.  What to do about empty / no stdout blocks - maybe just remove themm?
