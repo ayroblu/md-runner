@@ -24,12 +24,9 @@ console.log(`${hi} ${there}`)
 hi there
 ```
 
-```js
-console.log(`${hi} ${there}`)
-```
-
-```txt output
-hi there
+```js ignore
+// And I can skip some code blocks by adding an "ignore" to the code block attributes
+throw new Error('skip me');
 ```
 
 ### Usage
@@ -72,4 +69,4 @@ pwd
 
 1.  Add support for "hidden", and "ignore" meta tags
 2.  Add better HTML styling.
-3.  What to do about empty / no stdout blocks - maybe just remove themm?
+

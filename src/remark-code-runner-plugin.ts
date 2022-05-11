@@ -69,7 +69,7 @@ const isKey = <T extends { [k: number | string | symbol]: any }>(
 function getCodeToRun(tree: Root): CodeToRun[] {
   const codeToRun: CodeToRun[] = [];
   visit<Root, Code["type"]>(tree, "code", (node, index, parent) => {
-    if (parent && index !== null && !isOutputCode(node)) {
+    if (parent && index !== null && !isOutputCode(node) && !isIgnore(node)) {
       const followingNode = parent.children[index + 1];
       const hasFollowingCodeOutput =
         followingNode?.type === "code" && isOutputCode(followingNode);
@@ -109,4 +109,8 @@ function getCodeToRun(tree: Root): CodeToRun[] {
 
 function isOutputCode(node: Code): boolean {
   return node.meta?.split(" ").includes("output") ?? false;
+}
+
+function isIgnore(node: Code): boolean {
+  return node.meta?.split(" ").includes("ignore") ?? false;
 }
