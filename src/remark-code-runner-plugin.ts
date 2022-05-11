@@ -5,7 +5,12 @@ import { visit } from "unist-util-visit";
 import { getShellRunner, langConfig } from "./shell-helper.js";
 
 type RemarkCodeRunnerOptions = {};
-type CodeToRun = { codeNode: Code; outputNode: Code };
+type CodeToRun = {
+  codeNode: Code;
+  outputNode: Code;
+  // These need to be run in reverse order due to index of array issues
+  deleteOutputNode: () => void;
+};
 
 export const remarkCodeRunnerPlugin: Plugin<[RemarkCodeRunnerOptions?], Root> =
   () => async (tree) => {
@@ -13,12 +18,18 @@ export const remarkCodeRunnerPlugin: Plugin<[RemarkCodeRunnerOptions?], Root> =
     // return tree;
     const codeToRun: CodeToRun[] = getCodeToRun(tree);
     const { closeAllShellRunners, getShellRunnerByLang } = shellRunnerManager();
-    for (const { codeNode, outputNode } of codeToRun) {
+    const stack: (() => void)[] = [];
+    for (const { codeNode, deleteOutputNode, outputNode } of codeToRun) {
       const shellRunner = getShellRunnerByLang(codeNode.lang);
       if (!shellRunner) return;
       const output = await shellRunner.runCmd(codeNode.value);
-      outputNode.value = output;
+      if (!output) {
+        stack.push(deleteOutputNode);
+      } else {
+        outputNode.value = output;
+      }
     }
+    stack.reverse().forEach((func) => func());
     closeAllShellRunners();
 
     return tree;
@@ -63,8 +74,18 @@ function getCodeToRun(tree: Root): CodeToRun[] {
         followingNode?.type === "code" && isOutputCode(followingNode);
 
       if (hasFollowingCodeOutput) {
-        codeToRun.push({ codeNode: node, outputNode: followingNode });
+        const deleteOutputNode = () => {
+          parent.children.splice(index + 1, 1);
+        };
+        codeToRun.push({
+          codeNode: node,
+          outputNode: followingNode,
+          deleteOutputNode,
+        });
       } else {
+        const deleteOutputNode = () => {
+          parent.children.splice(index + 1, 1);
+        };
         const outputNode: Code = {
           type: "code",
           value: "",
@@ -73,7 +94,11 @@ function getCodeToRun(tree: Root): CodeToRun[] {
           meta: "output",
         };
         parent.children.splice(index + 1, 0, outputNode);
-        codeToRun.push({ codeNode: node, outputNode: outputNode });
+        codeToRun.push({
+          codeNode: node,
+          outputNode: outputNode,
+          deleteOutputNode,
+        });
       }
     }
   });

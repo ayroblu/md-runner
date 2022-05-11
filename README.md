@@ -64,3 +64,4 @@ hi
 
 1.  Add support for "hidden", and "ignore" meta tags
 2.  Add better HTML styling.
+3. What to do about empty / no stdout blocks - maybe just remove themm?
