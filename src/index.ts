@@ -5,6 +5,8 @@ import { Command } from "commander";
 import rehypeDocument from "rehype-document";
 import rehypeFormat from "rehype-format";
 // import rehypeShiki from "rehype-shiki";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
@@ -15,6 +17,7 @@ import { unified } from "unified";
 
 import p from "../package.json" assert { type: "json" };
 
+import { allowedLanguages } from "./allowed-languages.js";
 import { rehypeInjectCss } from "./rehype-css-plugin.js";
 import { remarkCodeRunnerPlugin } from "./remark-code-runner-plugin.js";
 
@@ -53,7 +56,7 @@ program
     runAndConvertToHtml(file, filename)
       .then(({ value }) => {
         if (output) {
-          fs.writeFileSync(value, value, { encoding: "utf-8" });
+          fs.writeFileSync(output, value, { encoding: "utf-8" });
         } else {
           console.log(value);
         }
@@ -80,13 +83,26 @@ function runAndConvertToHtml(markdownInput: string, filename: string) {
       .use(remarkGfm)
       .use(remarkCodeRunnerPlugin)
       .use(remarkToc)
-      .use(remarkRehype)
+      .use(remarkRehype, { allowDangerousHtml: true })
+      .use(rehypeRaw)
+      .use(rehypeSanitize, {
+        ...defaultSchema,
+        attributes: {
+          ...defaultSchema.attributes,
+          code: [
+            ...(defaultSchema.attributes?.["code"] || []),
+            // List of all allowed languages:
+            ["className", ...allowedLanguages],
+          ],
+        },
+      })
+      .use(rehypePrism, { ignoreMissing: false, alias: { shell: "zsh" } })
       .use(rehypeDocument, { title: filename })
       .use(rehypeInjectCss, { cssPaths: ["theme.css"] })
       // useful: https://github.com/wooorm/refractor#syntaxes
-      .use(rehypePrism, { ignoreMissing: false, alias: { shell: "zsh" } })
       // .use(rehypeShiki)
       .use(rehypeFormat)
+      // .use(rehypeStringify, { allowDangerousHtml: true })
       .use(rehypeStringify)
       .process(markdownInput)
   );
