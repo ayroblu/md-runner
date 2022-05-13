@@ -1,10 +1,12 @@
 import fs from "fs";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 
-import rehypePrism from "@mapbox/rehype-prism";
 import { Command } from "commander";
+import addClasses from "rehype-add-classes";
 import rehypeDocument from "rehype-document";
 import rehypeFormat from "rehype-format";
-// import rehypeShiki from "rehype-shiki";
+import rehypePrettyCode from "rehype-pretty-code";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
@@ -18,9 +20,10 @@ import { unified } from "unified";
 import p from "../package.json" assert { type: "json" };
 
 import { allowedLanguages } from "./allowed-languages.js";
-import { rehypeInjectCss } from "./rehype-css-plugin.js";
+import { rehypeInjectCss } from "./rehype-inject-css-plugin.js";
 import { remarkCodeRunnerPlugin } from "./remark-code-runner-plugin.js";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const program = new Command();
 
 program
@@ -77,33 +80,34 @@ async function updateMarkdown(markdownInput: string) {
 }
 
 function runAndConvertToHtml(markdownInput: string, filename: string) {
-  return (
-    unified()
-      .use(remarkParse)
-      .use(remarkGfm)
-      .use(remarkCodeRunnerPlugin)
-      .use(remarkToc)
-      .use(remarkRehype, { allowDangerousHtml: true })
-      .use(rehypeRaw)
-      .use(rehypeSanitize, {
-        ...defaultSchema,
-        attributes: {
-          ...defaultSchema.attributes,
-          code: [
-            ...(defaultSchema.attributes?.["code"] || []),
-            // List of all allowed languages:
-            ["className", ...allowedLanguages],
-          ],
-        },
-      })
-      .use(rehypePrism, { ignoreMissing: false, alias: { shell: "zsh" } })
-      .use(rehypeDocument, { title: filename })
-      .use(rehypeInjectCss, { cssPaths: ["theme.css"] })
-      // useful: https://github.com/wooorm/refractor#syntaxes
-      // .use(rehypeShiki)
-      .use(rehypeFormat)
-      // .use(rehypeStringify, { allowDangerousHtml: true })
-      .use(rehypeStringify)
-      .process(markdownInput)
+  const cssBlocks = ["github-markdown.css", "custom.css"].map((path) =>
+    fs.readFileSync(`${__dirname}/styles/${path}`, "utf-8"),
   );
+  return unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkCodeRunnerPlugin)
+    .use(remarkToc)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeRaw)
+    .use(rehypeSanitize, {
+      ...defaultSchema,
+      attributes: {
+        ...defaultSchema.attributes,
+        code: [
+          ...(defaultSchema.attributes?.["code"] || []),
+          // List of all allowed languages:
+          ["className", ...allowedLanguages],
+        ],
+      },
+    })
+    .use(rehypePrettyCode, { theme: "github-dark" })
+    .use(rehypeDocument, { title: filename })
+    .use(rehypeInjectCss, { cssBlocks })
+    .use(addClasses, {
+      body: "markdown-body",
+    })
+    .use(rehypeFormat)
+    .use(rehypeStringify)
+    .process(markdownInput);
 }

@@ -34,3 +34,7 @@ declare module "@mapbox/rehype-prism" {
     alias?: { [k: string]: string[] | string };
   };
 }
+
+declare module "rehype-add-classes" {
+  export default function addClasses(options?: { [k: string]: string });
+}

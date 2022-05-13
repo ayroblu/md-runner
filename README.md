@@ -67,6 +67,5 @@ pwd
 
 ### TODO
 
-1.  Add support for "hidden", and "ignore" meta tags
-2.  Add better HTML styling.
+1.  Add better HTML styling.
 

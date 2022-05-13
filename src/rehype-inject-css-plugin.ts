@@ -1,24 +1,22 @@
-import fs from "fs";
-
 import { Root, Element } from "hast";
 import { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
-type RehypeInjectCssOptions = { cssPaths: string[] };
+type RehypeInjectCssOptions = { cssBlocks: string[] };
 
 export const rehypeInjectCss: Plugin<[RehypeInjectCssOptions], Root> =
-  ({ cssPaths }) =>
+  ({ cssBlocks }) =>
   (tree) => {
     visit<Root, Element["type"]>(tree, "element", (node) => {
       if (node.tagName === "head") {
-        cssPaths.forEach((path) => {
+        cssBlocks.forEach((css) => {
           const style: Element = {
             type: "element",
             tagName: "style",
             children: [
               {
                 type: "text",
-                value: fs.readFileSync(path).toString(),
+                value: css,
               },
             ],
           };
