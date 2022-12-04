@@ -101,7 +101,9 @@ function runAndConvertToHtml(markdownInput: string, filename: string) {
         ],
       },
     })
-    .use(rehypePrettyCode, { theme: "github-dark" })
+    .use(rehypePrettyCode, {
+      theme: { light: "github-light", dark: "github-dark" },
+    })
     .use(rehypeDocument, { title: filename })
     .use(rehypeInjectCss, { cssBlocks })
     .use(addClasses, {

@@ -1,5 +1,7 @@
 # Code Runner
 
+> Checkout this page on https://ayroblu.github.io/md-runner
+
 This runs code blocks and outputs code blocks that contain the output of the run.
 
 For example with JavaScript I can do the following:
@@ -67,5 +69,5 @@ pwd
 
 ### TODO
 
-1.  Add better HTML styling.
+- Add better in editor editing
 
