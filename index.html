@@ -894,51 +894,79 @@ padding: 45px;
 .markdown-body {
 padding: 15px;
 }
+}
+@media (prefers-color-scheme: dark) {
+pre[data-theme="light"],
+code[data-theme="light"] {
+display: none;
+}
+}
+@media (prefers-color-scheme: light), (prefers-color-scheme: no-preference) {
+pre[data-theme="dark"],
+code[data-theme="dark"] {
+display: none;
+}
 }</style>
   </head>
   <body class="markdown-body">
     <h1>Code Runner</h1>
+    <blockquote>
+      <p>Checkout this page on <a href="https://ayroblu.github.io/md-runner">https://ayroblu.github.io/md-runner</a></p>
+    </blockquote>
     <p>This runs code blocks and outputs code blocks that contain the output of the run.</p>
     <p>For example with JavaScript I can do the following:</p>
     <div data-rehype-pretty-code-fragment="">
-      <pre data-language="js" data-theme="default"><code data-language="js" data-theme="default"><span class="line"><span style="color: #FF7B72">const</span><span style="color: #C9D1D9"> </span><span style="color: #79C0FF">hi</span><span style="color: #C9D1D9"> </span><span style="color: #FF7B72">=</span><span style="color: #C9D1D9"> </span><span style="color: #A5D6FF">"hi"</span></span>
+      <pre data-language="js" data-theme="light"><code data-language="js" data-theme="light"><span class="line"><span style="color: #CF222E">const</span><span style="color: #24292F"> </span><span style="color: #0550AE">hi</span><span style="color: #24292F"> </span><span style="color: #CF222E">=</span><span style="color: #24292F"> </span><span style="color: #0A3069">"hi"</span></span>
+<span class="line"><span style="color: #24292F">console.</span><span style="color: #8250DF">log</span><span style="color: #24292F">(hi)</span></span></code></pre>
+      <pre data-language="js" data-theme="dark"><code data-language="js" data-theme="dark"><span class="line"><span style="color: #FF7B72">const</span><span style="color: #C9D1D9"> </span><span style="color: #79C0FF">hi</span><span style="color: #C9D1D9"> </span><span style="color: #FF7B72">=</span><span style="color: #C9D1D9"> </span><span style="color: #A5D6FF">"hi"</span></span>
 <span class="line"><span style="color: #C9D1D9">console.</span><span style="color: #D2A8FF">log</span><span style="color: #C9D1D9">(hi)</span></span></code></pre>
     </div>
     <div data-rehype-pretty-code-fragment="">
-      <pre data-language="txt" data-theme="default"><code data-language="txt" data-theme="default"><span class="line"><span style="color: #c9d1d9">hi</span></span></code></pre>
+      <pre data-language="txt" data-theme="light"><code data-language="txt" data-theme="light"><span class="line"><span style="color: #24292f">hi</span></span></code></pre>
+      <pre data-language="txt" data-theme="dark"><code data-language="txt" data-theme="dark"><span class="line"><span style="color: #c9d1d9">hi</span></span></code></pre>
     </div>
     <p>and variables are kept in scope so I can then follow it up with a following code block like:</p>
     <div data-rehype-pretty-code-fragment="">
-      <pre data-language="js" data-theme="default"><code data-language="js" data-theme="default"><span class="line"><span style="color: #FF7B72">const</span><span style="color: #C9D1D9"> </span><span style="color: #79C0FF">there</span><span style="color: #C9D1D9"> </span><span style="color: #FF7B72">=</span><span style="color: #C9D1D9"> </span><span style="color: #A5D6FF">'there'</span></span>
+      <pre data-language="js" data-theme="light"><code data-language="js" data-theme="light"><span class="line"><span style="color: #CF222E">const</span><span style="color: #24292F"> </span><span style="color: #0550AE">there</span><span style="color: #24292F"> </span><span style="color: #CF222E">=</span><span style="color: #24292F"> </span><span style="color: #0A3069">'there'</span></span>
+<span class="line"><span style="color: #24292F">console.</span><span style="color: #8250DF">log</span><span style="color: #24292F">(</span><span style="color: #0A3069">`${</span><span style="color: #24292F">hi</span><span style="color: #0A3069">} ${</span><span style="color: #24292F">there</span><span style="color: #0A3069">}`</span><span style="color: #24292F">)</span></span></code></pre>
+      <pre data-language="js" data-theme="dark"><code data-language="js" data-theme="dark"><span class="line"><span style="color: #FF7B72">const</span><span style="color: #C9D1D9"> </span><span style="color: #79C0FF">there</span><span style="color: #C9D1D9"> </span><span style="color: #FF7B72">=</span><span style="color: #C9D1D9"> </span><span style="color: #A5D6FF">'there'</span></span>
 <span class="line"><span style="color: #C9D1D9">console.</span><span style="color: #D2A8FF">log</span><span style="color: #C9D1D9">(</span><span style="color: #A5D6FF">`${</span><span style="color: #C9D1D9">hi</span><span style="color: #A5D6FF">} ${</span><span style="color: #C9D1D9">there</span><span style="color: #A5D6FF">}`</span><span style="color: #C9D1D9">)</span></span></code></pre>
     </div>
     <div data-rehype-pretty-code-fragment="">
-      <pre data-language="txt" data-theme="default"><code data-language="txt" data-theme="default"><span class="line"><span style="color: #c9d1d9">hi there</span></span></code></pre>
+      <pre data-language="txt" data-theme="light"><code data-language="txt" data-theme="light"><span class="line"><span style="color: #24292f">hi there</span></span></code></pre>
+      <pre data-language="txt" data-theme="dark"><code data-language="txt" data-theme="dark"><span class="line"><span style="color: #c9d1d9">hi there</span></span></code></pre>
     </div>
     <div data-rehype-pretty-code-fragment="">
-      <pre data-language="js" data-theme="default"><code data-language="js" data-theme="default"><span class="line"><span style="color: #8B949E">// And I can skip some code blocks by adding an "ignore" to the code block attributes</span></span>
-<span class="line"><span style="color: #FF7B72">throw</span><span style="color: #C9D1D9"> </span><span style="color: #FF7B72">new</span><span style="color: #C9D1D9"> </span><span style="color: #79C0FF">Error</span><span style="color: #C9D1D9">(</span><span style="color: #A5D6FF">'skip me'</span><span style="color: #C9D1D9">);</span></span></code></pre>
+      <pre data-language="js" data-theme="light"><code data-language="js" data-theme="light"><span class="line"><span style="color: #6E7781">// And I can skip some code blocks by adding an "ignore" to the code block attributes</span></span>
+<span class="line"><span style="color: #CF222E">throw</span><span style="color: #24292F"> </span><span style="color: #CF222E">new</span><span style="color: #24292F"> </span><span style="color: #8250DF">Error</span><span style="color: #24292F">(</span><span style="color: #0A3069">'skip me'</span><span style="color: #24292F">);</span></span></code></pre>
+      <pre data-language="js" data-theme="dark"><code data-language="js" data-theme="dark"><span class="line"><span style="color: #8B949E">// And I can skip some code blocks by adding an "ignore" to the code block attributes</span></span>
+<span class="line"><span style="color: #FF7B72">throw</span><span style="color: #C9D1D9"> </span><span style="color: #FF7B72">new</span><span style="color: #C9D1D9"> </span><span style="color: #D2A8FF">Error</span><span style="color: #C9D1D9">(</span><span style="color: #A5D6FF">'skip me'</span><span style="color: #C9D1D9">);</span></span></code></pre>
     </div>
     <h3>Usage</h3>
     <p>This README.md is updated by running <code>yarn start md -w README.md</code></p>
     <h3>Example with stateful shell and detail summary</h3>
     <div data-rehype-pretty-code-fragment="">
-      <pre data-language="zsh" data-theme="default"><code data-language="zsh" data-theme="default"><span class="line"><span style="color: #79C0FF">pwd</span></span></code></pre>
+      <pre data-language="zsh" data-theme="light"><code data-language="zsh" data-theme="light"><span class="line"><span style="color: #0550AE">pwd</span></span></code></pre>
+      <pre data-language="zsh" data-theme="dark"><code data-language="zsh" data-theme="dark"><span class="line"><span style="color: #79C0FF">pwd</span></span></code></pre>
     </div>
     <div data-rehype-pretty-code-fragment="">
-      <pre data-language="txt" data-theme="default"><code data-language="txt" data-theme="default"><span class="line"><span style="color: #c9d1d9">/Users/runner/work/md-runner/md-runner</span></span></code></pre>
+      <pre data-language="txt" data-theme="light"><code data-language="txt" data-theme="light"><span class="line"><span style="color: #24292f">/Users/runner/work/md-runner/md-runner</span></span></code></pre>
+      <pre data-language="txt" data-theme="dark"><code data-language="txt" data-theme="dark"><span class="line"><span style="color: #c9d1d9">/Users/runner/work/md-runner/md-runner</span></span></code></pre>
     </div>
     <details>
       <summary>Hidden - cd to another directory</summary>
       <div data-rehype-pretty-code-fragment="">
-        <pre data-language="zsh" data-theme="default"><code data-language="zsh" data-theme="default"><span class="line"><span style="color: #79C0FF">cd</span><span style="color: #C9D1D9"> ..</span></span></code></pre>
+        <pre data-language="zsh" data-theme="light"><code data-language="zsh" data-theme="light"><span class="line"><span style="color: #0550AE">cd</span><span style="color: #24292F"> ..</span></span></code></pre>
+        <pre data-language="zsh" data-theme="dark"><code data-language="zsh" data-theme="dark"><span class="line"><span style="color: #79C0FF">cd</span><span style="color: #C9D1D9"> ..</span></span></code></pre>
       </div>
     </details>
     <div data-rehype-pretty-code-fragment="">
-      <pre data-language="zsh" data-theme="default"><code data-language="zsh" data-theme="default"><span class="line"><span style="color: #79C0FF">pwd</span></span></code></pre>
+      <pre data-language="zsh" data-theme="light"><code data-language="zsh" data-theme="light"><span class="line"><span style="color: #0550AE">pwd</span></span></code></pre>
+      <pre data-language="zsh" data-theme="dark"><code data-language="zsh" data-theme="dark"><span class="line"><span style="color: #79C0FF">pwd</span></span></code></pre>
     </div>
     <div data-rehype-pretty-code-fragment="">
-      <pre data-language="txt" data-theme="default"><code data-language="txt" data-theme="default"><span class="line"><span style="color: #c9d1d9">/Users/runner/work/md-runner</span></span></code></pre>
+      <pre data-language="txt" data-theme="light"><code data-language="txt" data-theme="light"><span class="line"><span style="color: #24292f">/Users/runner/work/md-runner</span></span></code></pre>
+      <pre data-language="txt" data-theme="dark"><code data-language="txt" data-theme="dark"><span class="line"><span style="color: #c9d1d9">/Users/runner/work/md-runner</span></span></code></pre>
     </div>
     <h3>Supported languages</h3>
     <ul>
@@ -946,8 +974,8 @@ padding: 15px;
       <li>zsh</li>
     </ul>
     <h3>TODO</h3>
-    <ol>
-      <li>Add better HTML styling.</li>
-    </ol>
+    <ul>
+      <li>Add better in editor editing</li>
+    </ul>
   </body>
 </html>
