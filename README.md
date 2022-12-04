@@ -69,5 +69,8 @@ pwd
 
 ### TODO
 
-- Add better in editor editing
+- Add better in editor editing - update with a "command"
+- Add watcher for updating html as you change it + serve + auto reload
+- Add binary / publish to npm for external use
+- Update shell-helper to not use yarn
 
